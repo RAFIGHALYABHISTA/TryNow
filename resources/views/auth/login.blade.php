@@ -58,8 +58,8 @@
 
         <!-- Register -->
         <p class="mt-6 text-center text-sm text-gray-600">
-            Belum punya akun? 
-            <a href="#" class="text-blue-700 font-semibold hover:underline">Daftar</a>
+            Belum punya akun?
+            <a href="{{ route('auth.register') }}" class="text-blue-700 font-semibold hover:underline">Daftar</a>
         </p>
     </div>
 

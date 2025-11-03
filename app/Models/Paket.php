@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Paket extends Model
@@ -9,15 +10,14 @@ class Paket extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama',
+        'nama_paket',
         'deskripsi',
         'harga',
-        'tipe', // basic, reguler, premium
     ];
 
     public function soals()
     {
-        return $this->belongsToMany(Soal::class, 'paket_soal');
+        return $this->hasManyThrough(Soal::class, Mapel::class);
     }
 
     public function transaksis()

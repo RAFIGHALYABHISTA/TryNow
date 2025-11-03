@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Soal extends Model
@@ -11,10 +12,10 @@ class Soal extends Model
     protected $fillable = [
         'mapel_id',
         'pertanyaan',
-        'opsi_a',
-        'opsi_b',
-        'opsi_c',
-        'opsi_d',
+        'pilihan_a',
+        'pilihan_b',
+        'pilihan_c',
+        'pilihan_d',
         'jawaban_benar',
     ];
 

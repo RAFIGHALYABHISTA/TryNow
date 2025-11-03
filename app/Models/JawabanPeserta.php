@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JawabanPeserta extends Model
@@ -12,7 +13,7 @@ class JawabanPeserta extends Model
         'user_id',
         'soal_id',
         'jawaban',
-        'benar',
+        'is_benar',
     ];
 
     public function user()
