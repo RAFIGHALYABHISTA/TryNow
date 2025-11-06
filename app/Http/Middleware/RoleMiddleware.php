@@ -10,11 +10,11 @@ class RoleMiddleware
     public function handle($request, Closure $next, $role)
     {
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->route('auth.login');
         }
 
         if (Auth::user()->role !== $role) {
-            return redirect()->route('login')->with('error', 'Anda tidak punya akses!');
+            return redirect()->route('auth.login')->with('error', 'Anda tidak punya akses!');
         }
 
         return $next($request);

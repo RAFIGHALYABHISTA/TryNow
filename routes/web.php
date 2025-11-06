@@ -47,6 +47,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/admin/users/{user}/role', [App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.updateRole');
 });
 
+// === SEMENTARA: Admin routes tanpa login (bypass auth) ===
+// Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+// Route::resource('/admin/pakets', App\Http\Controllers\Admin\PaketController::class, ['as' => 'admin']);
+// Route::resource('/admin/soals', App\Http\Controllers\Admin\SoalController::class, ['as' => 'admin']);
+// Route::get('/admin/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+// Route::put('/admin/users/{user}/role', [App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.updateRole');
+
+
 // Register
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');

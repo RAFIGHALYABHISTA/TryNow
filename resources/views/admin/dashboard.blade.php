@@ -1,16 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Dashboard</title>
-</head>
-<body>
-    <h1>Halo, {{ Auth::user()->name }}</h1>
+@extends('admin.layout')
 
-    <p>Selamat datang di dashboard user. Kamu bisa mulai tryout sesuai paketmu.</p>
+@section('title', 'TryNow | Dashboard Admin')
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
-</body>
-</html>
+@section('content')
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-lg font-semibold">Total User</h2>
+            <p class="text-3xl mt-2">1.245</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-lg font-semibold">TryOut Aktif</h2>
+            <p class="text-3xl mt-2">12</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-lg font-semibold">Promo Berjalan</h2>
+            <p class="text-3xl mt-2">3</p>
+        </div>
+    </div>
+@endsection
