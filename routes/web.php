@@ -32,9 +32,10 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin
+// Admin routes are protected with auth and role middleware so only admins can access them
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard/data', [AdminDashboard::class, 'data'])->name('admin.dashboard.data');
 
     // Paket Management
     Route::resource('/admin/pakets', App\Http\Controllers\Admin\PaketController::class, ['as' => 'admin']);
@@ -45,7 +46,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // User Management
     Route::get('/admin/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
     Route::put('/admin/users/{user}/role', [App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.updateRole');
+    Route::delete('/admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
 });
+
 
 // Register
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');

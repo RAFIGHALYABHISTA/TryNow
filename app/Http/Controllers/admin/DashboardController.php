@@ -17,13 +17,36 @@ class DashboardController extends Controller
         $totalSoals = Soal::count();
         $totalTransactions = Transaksi::count();
         $recentTransactions = Transaksi::with(['user', 'paket'])->latest()->take(5)->get();
+        $recentUsers = User::where('role', 'user')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'totalUsers',
             'totalPakets',
             'totalSoals',
             'totalTransactions',
-            'recentTransactions'
+            'recentTransactions',
+            'recentUsers'
         ));
+    }
+
+    // JSON endpoint used for polling the dashboard in realtime
+    public function data()
+    {
+        $totalUsers = User::where('role', 'user')->count();
+        $totalPakets = Paket::count();
+        $totalSoals = Soal::count();
+        $totalTransactions = Transaksi::count();
+
+        $recentUsers = User::where('role', 'user')->latest()->take(5)->get(['id','name','email','created_at']);
+        $recentTransactions = Transaksi::with(['user','paket'])->latest()->take(5)->get();
+
+        return response()->json([
+            'totalUsers' => $totalUsers,
+            'totalPakets' => $totalPakets,
+            'totalSoals' => $totalSoals,
+            'totalTransactions' => $totalTransactions,
+            'recentUsers' => $recentUsers,
+            'recentTransactions' => $recentTransactions,
+        ]);
     }
 }

@@ -21,7 +21,14 @@ class PaketController extends Controller
 
     public function store(Request $request)
     {
-        Paket::create($request->all());
+        $request->validate([
+            'nama_paket' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'nullable|numeric',
+        ]);
+
+        Paket::create($request->only(['nama_paket', 'deskripsi', 'harga']));
+
         return redirect()->route('admin.pakets.index')->with('success', 'Paket berhasil dibuat.');
     }
 
@@ -32,7 +39,13 @@ class PaketController extends Controller
 
     public function update(Request $request, Paket $paket)
     {
-        $paket->update($request->all());
+        $request->validate([
+            'nama_paket' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'harga' => 'nullable|numeric',
+        ]);
+
+        $paket->update($request->only(['nama_paket', 'deskripsi', 'harga']));
         return redirect()->route('admin.pakets.index')->with('success', 'Paket berhasil diupdate.');
     }
 

@@ -6,6 +6,8 @@
     <title>Dashboard User - TryNow</title>
     <!-- MENGGUNAKAN SINTAKS LARAVEL/BLADE ASLI UNTUK CSS -->
     @vite('resources/css/app.css')
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>[x-cloak] { display: none !important; }</style>
     <style>
         /* Menggunakan font Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
