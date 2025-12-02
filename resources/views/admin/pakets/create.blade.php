@@ -11,22 +11,19 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Nama Paket</label>
-                <input type="text" name="nama"
+                <input type="text" name="nama_paket" value="{{ old('nama_paket') }}"
                     class="mt-1 block w-full rounded border-gray-300 shadow-sm" placeholder="Contoh: UTBK TPS 2025">
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                <select name="kategori" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-                    <option value="TPS">TPS</option>
-                    <option value="TKA">TKA</option>
-                </select>
+                <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                <textarea name="deskripsi" rows="3" class="mt-1 block w-full rounded border-gray-300 shadow-sm" placeholder="Deskripsi singkat paket">{{ old('deskripsi') }}</textarea>
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700">Jumlah Soal</label>
-                <input type="number" name="jumlah_soal"
-                    class="mt-1 block w-full rounded border-gray-300 shadow-sm" placeholder="Contoh: 40">
+                <label class="block text-sm font-medium text-gray-700">Harga</label>
+                <input type="number" step="0.01" name="harga" value="{{ old('harga', 0) }}"
+                    class="mt-1 block w-full rounded border-gray-300 shadow-sm" placeholder="0.00">
             </div>
 
             <button type="submit"

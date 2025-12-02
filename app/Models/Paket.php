@@ -17,7 +17,8 @@ class Paket extends Model
 
     public function soals()
     {
-        return $this->hasManyThrough(Soal::class, Mapel::class);
+        // pakets and soals are connected via pivot table paket_soal (many-to-many)
+        return $this->belongsToMany(Soal::class, 'paket_soal');
     }
 
     public function transaksis()

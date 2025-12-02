@@ -12,8 +12,11 @@
     <!-- Header Profil -->
     <div class="bg-blue-900 text-white relative pb-24">
         <div class="max-w-4xl mx-auto px-6 py-10 flex flex-col items-center text-center">
-            <img src="https://placehold.co/100x100" alt="Avatar" 
-                class="w-24 h-24 rounded-full ring-4 ring-white shadow-md object-cover mb-4">
+            @php
+                $parts = preg_split('/\s+/', trim($user->name));
+                $initials = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+            @endphp
+            <div class="w-24 h-24 rounded-full ring-4 ring-white shadow-md flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-bold text-2xl mb-4">{{ $initials }}</div>
             <h2 class="text-2xl font-semibold flex items-center gap-2">
                 {{ $user->name }}
                 <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Premium 👑</span>
@@ -55,17 +58,61 @@
             </div>
         </div>
 
-        <!-- Paket -->
+        <!-- Active Package / Purchased Tryouts -->
         <div class="bg-white rounded-xl shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Paket</h3>
-            <div class="grid sm:grid-cols-3 gap-y-2 text-sm text-gray-700">
-                <p>Status: <span class="font-semibold text-yellow-600">Premium</span></p>
-                <p>Berlaku hingga: <span class="font-semibold">20/12/2025</span></p>
-                <p>Jumlah Paket: <span class="font-semibold">1</span></p>
-            </div>
-            <button class="mt-4 w-full sm:w-auto bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition">
-                Tambah Paket
-            </button>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Paket Aktif</h3>
+            @if($activeTransaksi)
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">{{ $activeTransaksi->paket->nama_paket }}</h4>
+                        <p class="text-sm text-gray-600 mt-1">{{ \Illuminate\Support\Str::limit($activeTransaksi->paket->deskripsi, 120) }}</p>
+                        <p class="text-sm text-gray-500 mt-2">Jawaban: <span class="font-semibold">{{ $activeTransaksi->answered ?? 0 }} / {{ $activeTransaksi->total_soals ?? 0 }}</span></p>
+                    </div>
+                    <div class="w-full md:w-1/3">
+                        <div class="bg-gray-100 rounded-full h-4 w-full overflow-hidden">
+                            <div style="width: {{ $activeTransaksi->progress ?? 0 }}%;" class="h-full bg-yellow-400"></div>
+                        </div>
+                        <div class="text-sm text-gray-500 text-right mt-2">Progress: <span class="font-semibold">{{ $activeTransaksi->progress ?? 0 }}%</span></div>
+
+                        <div class="mt-4 flex gap-2 justify-end">
+                            <a href="{{ route('user.tryout.start', $activeTransaksi->paket) }}" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Lanjutkan Kerjakan</a>
+                            <a href="{{ route('user.hasil.show', $activeTransaksi->paket) }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Lihat Ringkasan</a>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="text-sm text-gray-600">Anda tidak memiliki paket aktif saat ini.</div>
+                <div class="mt-4 flex gap-2">
+                    <a href="{{ route('user.paket') }}" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Beli Paket</a>
+                </div>
+            @endif
+        </div>
+
+        <!-- Completed Tryouts -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Tryout Selesai</h3>
+            @if($completedTransaksis && $completedTransaksis->count() > 0)
+                <ul class="space-y-3">
+                    @foreach($completedTransaksis as $t)
+                        <li class="flex items-center justify-between border rounded p-3">
+                            <div>
+                                <div class="font-semibold text-gray-800">{{ $t->paket->nama_paket }}</div>
+                                <div class="text-xs text-gray-500">{{ $t->created_at->format('d M Y') }} • {{ $t->total_questions ?? '-' }} soal</div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold">{{ $t->score ?? 0 }} / {{ $t->total_questions ?? 0 }}</div>
+                                    <div class="text-xs text-gray-500">{{ $t->percentage ?? 0 }}%</div>
+                                </div>
+                                <a href="{{ route('user.hasil.show', $t->paket) }}" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 text-sm">Lihat</a>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <div class="text-sm text-gray-600">Belum ada tryout yang diselesaikan.</div>
+            @endif
         </div>
 
         <!-- Profile Info -->

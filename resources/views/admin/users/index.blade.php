@@ -16,23 +16,33 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                {{-- Contoh data statis --}}
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Budi Santoso</td>
-                    <td class="px-6 py-4 whitespace-nowrap">budi@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">User</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <a href="#" class="text-blue-500 hover:underline">Edit Role</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Siti Aminah</td>
-                    <td class="px-6 py-4 whitespace-nowrap">siti@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Admin</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <a href="#" class="text-blue-500 hover:underline">Edit Role</a>
-                    </td>
-                </tr>
+                @foreach($users as $user)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ ucfirst($user->role) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                            <form action="{{ route('admin.users.updateRole', $user) }}" method="POST" class="inline-flex items-center gap-2">
+                                @csrf
+                                @method('PUT')
+                                <select name="role" class="px-2 py-1 border rounded text-sm">
+                                    <option value="user" @if($user->role == 'user') selected @endif>User</option>
+                                    <option value="premium" @if($user->role == 'premium') selected @endif>Premium</option>
+                                </select>
+                                <button type="submit" class="text-blue-500 hover:underline text-sm">Update</button>
+                            </form>
+                            @if(auth()->id() !== $user->id && $user->role !== 'admin')
+                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Hapus user ini? Semua data terkait juga akan dihapus.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-500 hover:underline text-sm">Hapus</button>
+                                </form>
+                            @endif
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

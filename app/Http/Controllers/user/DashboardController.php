@@ -82,7 +82,44 @@ class DashboardController extends Controller
         // Get active package
         $activeTransaksi = Transaksi::where('user_id', $user->id)->where('status', 'success')->with('paket')->first();
 
-        return view('user.profile', compact('user', 'completedTryouts', 'averageScore', 'activeTransaksi'));
+        // Calculate progress for active transaction (if any)
+        if ($activeTransaksi) {
+            $totalSoals = $activeTransaksi->paket->soals()->count();
+            $answeredSoals = \App\Models\JawabanPeserta::where('user_id', $user->id)
+                ->whereHas('soal', function($q) use ($activeTransaksi) {
+                    $q->whereHas('pakets', function($pq) use ($activeTransaksi) {
+                        $pq->where('paket_id', $activeTransaksi->paket_id);
+                    });
+                })->count();
+
+            $activeTransaksi->progress = $totalSoals > 0 ? round(($answeredSoals / $totalSoals) * 100) : 0;
+            $activeTransaksi->is_completed = $activeTransaksi->progress == 100;
+            $activeTransaksi->answered = $answeredSoals;
+            $activeTransaksi->total_soals = $totalSoals;
+        }
+
+        // Completed transactions list for the profile page
+        $completedTransaksis = Transaksi::where('user_id', $user->id)->where('status', 'completed')->with('paket')->get();
+
+        // Attach score details for each completed transaksi
+        foreach ($completedTransaksis as $t) {
+            $jawabanPesertas = \App\Models\JawabanPeserta::where('user_id', $user->id)
+                ->whereHas('soal', function($q) use ($t) {
+                    $q->whereHas('pakets', function($pq) use ($t) {
+                        $pq->where('paket_id', $t->paket_id);
+                    });
+                })->get();
+
+            $score = $jawabanPesertas->where('is_benar', true)->count();
+            $total = $jawabanPesertas->count();
+            $perc = $total > 0 ? round(($score / $total) * 100, 2) : 0;
+
+            $t->score = $score;
+            $t->total_questions = $total;
+            $t->percentage = $perc;
+        }
+
+        return view('user.profile', compact('user', 'completedTryouts', 'averageScore', 'activeTransaksi', 'completedTransaksis'));
     }
 
     public function updateProfile(Request $request)

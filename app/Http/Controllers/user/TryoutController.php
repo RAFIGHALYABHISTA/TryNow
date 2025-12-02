@@ -26,7 +26,8 @@ class TryoutController extends Controller
 
         foreach ($answers as $soalId => $jawaban) {
             $soal = Soal::find($soalId);
-            $isBenar = $soal->jawaban_benar === $jawaban;
+            // Normalize answers to lower-case (views may send upper-case values)
+            $isBenar = strtolower($soal->jawaban_benar) === strtolower($jawaban);
 
             if ($isBenar) {
                 $score++;
