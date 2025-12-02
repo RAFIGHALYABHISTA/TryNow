@@ -13,28 +13,25 @@ FROM php:8.3-fpm
 
 WORKDIR /app
 
-# Install necessary system packages & PHP extensions
+# Install system libs + PHP extensions required by Laravel
 RUN apt-get update && apt-get install -y \
+    unzip git curl \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libonig-dev \
     libzip-dev \
-    zip \
-    unzip \
-    git \
-    curl \
+    libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo_mysql mysqli mbstring exif pcntl bcmath gd zip intl
 
-# Copy build results
+# Copy build dependencies
 COPY --from=build /app /app
 
-# Permissions for Laravel
+# Set permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Railway will inject $PORT automatically
+# Expose port
 EXPOSE 8000
 
-# Start Laravel using PHP built-in server
+# Start server using PHP built-in server
 CMD php -S 0.0.0.0:${PORT:-8000} -t public
