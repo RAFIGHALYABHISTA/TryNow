@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
@@ -8,9 +9,7 @@ use App\Http\Controllers\User\PaketController;
 use App\Http\Controllers\User\TryoutController;
 use App\Http\Controllers\User\HasilController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
